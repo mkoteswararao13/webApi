@@ -1,0 +1,17 @@
+﻿@page
+@model WEBCORE.Pages.EMPModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "EMP";
+    Layout = "~/Pages/_Layout.cshtml";
+}
+
+<h2>EMP</h2>
+<form method="post">
+    <input asp-for="fname" />
+    <button type="submit">Save</button>
+
+    <button type="submit" asp-page-handler="delete">
+        delete
+    </button>
+</form>
