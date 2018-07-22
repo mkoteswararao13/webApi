@@ -1,6 +1,8 @@
-﻿using System;
+﻿using API.filters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 
 namespace API
@@ -16,9 +18,15 @@ namespace API
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                routeTemplate: "api/{controller}/{format}/{id}",
+                defaults: new { format = RouteParameter.Optional, id = RouteParameter.Optional }
             );
+            ///config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Formatters.JsonFormatter.AddUriPathExtensionMapping("json", "application/json");
+            config.Formatters.XmlFormatter.AddUriPathExtensionMapping("xml", "text/xml");
+            config.EnableCors();
+            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.MediaTypeMappings.Add(new QueryStringMapping("json", "true", "application/json"));
+            config.Filters.Add(new BasicAunthenticationFilter());
         }
     }
 }

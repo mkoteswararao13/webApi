@@ -5,8 +5,11 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using API.Models;
+using System.Web.Http.Cors;
+
 namespace API.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class productsController : ApiController
     {
         Product[] products = new Product[]
@@ -28,9 +31,11 @@ namespace API.Controllers
             {
                 return NotFound();
             }
-            return new HttpResponseMessage(HttpStatusCode.Continue);
-             
+            // return new HttpResponseMessage(HttpStatusCode.Continue);
+
             return Ok(product);
         }
+
+        //   protected 
     }
 }

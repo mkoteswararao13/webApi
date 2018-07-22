@@ -18,6 +18,13 @@ namespace WEBCORE.Pages
             return Page();
 
         }
+        public IActionResult OnGetempAsync(int empid)
+
+        {
+            fname = "koti";
+            return Page();
+
+        }
         public IActionResult OnPostAsync()
 
         {
