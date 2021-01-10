@@ -38,9 +38,9 @@ namespace BasicAuthentication.Filters
         /// </summary>  
         /// <param name="userName"></param>  
         /// <param name="word"></param>  
-        public BasicAuthenticationIdentity(string userName, string word) : base(userName, "Basic")
+        public BasicAuthenticationIdentity(string userName, string words) : base(userName, "Basic")
         {
-            word = word;
+            word = words;
             UserName = userName;
         }
     }

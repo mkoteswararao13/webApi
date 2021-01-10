@@ -29,25 +29,20 @@ namespace TokenAPI.Providers
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
-
-            ApplicationUser user = await userManager.FindAsync(context.UserName, context.Password);
-
-            if (user == null)
+            // AuthRepository authRepository = new AuthRepository();
+            bool Valid = context.UserName == "KOTI" && context.UserName == "PASS";
+            if (Valid)
             {
-                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                var identity = new ClaimsIdentity(context.Options.AuthenticationType);
+                identity.AddClaim(new Claim("Username", context.UserName));
+                identity.AddClaim(new Claim("Password", context.Password));
+                context.Validated(identity);
+            }
+            else
+            {
+                context.SetError("invalid_grant", "The user name or password is      incorrect.");
                 return;
             }
-
-            ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(userManager,
-               OAuthDefaults.AuthenticationType);
-            ClaimsIdentity cookiesIdentity = await user.GenerateUserIdentityAsync(userManager,
-                CookieAuthenticationDefaults.AuthenticationType);
-
-            AuthenticationProperties properties = CreateProperties(user.UserName);
-            AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
-            context.Validated(ticket);
-            context.Request.Context.Authentication.SignIn(cookiesIdentity);
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
@@ -59,15 +54,29 @@ namespace TokenAPI.Providers
 
             return Task.FromResult<object>(null);
         }
-
+        /// <summary>
+        /// This method is used to validate client application
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             // Resource owner password credentials does not provide a client ID.
-            if (context.ClientId == null)
+            string clientId;
+            string clientSecret;
+
+            if (context.TryGetBasicCredentials(out clientId, out clientSecret))
+
+                if (context.ClientId == null)
             {
                 context.Validated();
             }
+            else {
 
+                context.SetError("invalid_client", "Client credentials could not be retrieved from the Authorization header");
+                context.Rejected();
+
+            }
             return Task.FromResult<object>(null);
         }
 
